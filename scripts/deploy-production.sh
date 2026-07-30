@@ -31,28 +31,6 @@ docker run -d \
   --health-retries=3 \
   $DOCKER_USERNAME/docker-cicd-app:$IMAGE_TAG
 
-echo "Waiting for container to be healthy..."
-timeout=60
-counter=0
-
-while [ $counter -lt $timeout ]; do
-  if docker inspect --format='{{.State.Health.Status}}' $CONTAINER_NAME 2>/dev/null | grep -q "healthy"; then
-    echo "Container is healthy!"
-    break
-  fi
-  
-  if [ $counter -eq $((timeout-1)) ]; then
-    echo "Container failed to become healthy within $timeout seconds"
-    docker logs $CONTAINER_NAME
-    exit 1
-  fi
-  
-  echo "Waiting for container to be healthy... ($((counter+1))/$timeout)"
-  sleep 1
-  counter=$((counter+1))
-done
-
 echo "Production deployment completed successfully!"
-echo "Application is running on port $PORT"
 
 docker ps | grep $CONTAINER_NAME
