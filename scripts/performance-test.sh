@@ -15,7 +15,6 @@ if ! command -v ab &> /dev/null; then
 fi
 
 echo "Starting performance test..."
-
 ab -t 30 -c $CONNECTIONS -g performance-results.tsv $TARGET_URL/
 
 echo -e "\nPerformance Test Summary:"
@@ -23,7 +22,6 @@ echo "========================="
 tail -n 20 performance-results.tsv | head -n 10
 
 echo -e "\nTesting health endpoint..."
-
-ab -n 100 -c 5 $TARGET_URL/health
+ab -n 100 -c 5 $TARGET_URL/health/
 
 echo "Performance test completed!"
