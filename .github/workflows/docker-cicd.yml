@@ -58,7 +58,7 @@ jobs:
           type=ref,event=branch
           type=ref,event=pr
           type=sha,prefix={{branch}}-
-          type=raw,value=latest
+          type=raw,value=latest,enable={{is_default_branch}}
           
     - name: Build and push Docker image
       uses: docker/build-push-action@v5
@@ -87,14 +87,11 @@ jobs:
         #!/bin/bash
         echo "Deploying application..."
         
-        # Stop existing container if running
         docker stop docker-cicd-app || true
         docker rm docker-cicd-app || true
         
-        # Pull latest image
         docker pull ${{ secrets.DOCKER_USERNAME }}/docker-cicd-app:latest
         
-        # Run new container
         docker run -d \
           --name docker-cicd-app \
           --restart unless-stopped \
